@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.util.Log;
 import nl.xservices.plugins.accessor.AbstractCalendarAccessor;
@@ -667,5 +668,16 @@ public class Calendar extends CordovaPlugin {
       Log.d(LOG_TAG, "onActivityResult error, resultcode: " + resultCode);
       callback.error("Unable to add event (" + resultCode + ").");
     }
+  }
+
+  @Override
+  public Bundle onSaveInstanceState() {
+    Bundle state = new Bundle();
+    return state;
+  }
+
+  @Override
+  public void onRestoreStateForActivityResult(Bundle state, CallbackContext callbackContext) {
+    this.callback = callbackContext;
   }
 }

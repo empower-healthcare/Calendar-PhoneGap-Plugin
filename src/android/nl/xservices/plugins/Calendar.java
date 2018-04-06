@@ -404,7 +404,11 @@ public class Calendar extends CordovaPlugin {
             }
           }
 
-          Calendar.this.cordova.startActivityForResult(Calendar.this, calIntent, RESULT_CODE_CREATE);
+          try {
+            Calendar.this.cordova.startActivityForResult(Calendar.this, calIntent, RESULT_CODE_CREATE);
+          } catch (Exception e) {
+            callback.error("Exception: Activity Not Found");
+          }
         }
       });
     } catch (JSONException e) {

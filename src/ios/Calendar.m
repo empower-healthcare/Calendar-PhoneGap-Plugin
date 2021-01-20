@@ -52,8 +52,12 @@
 
     EKEvent *myEvent = [EKEvent eventWithEventStore: self.eventStore];
     myEvent.title = title;
-    myEvent.location = location;
-    myEvent.notes = notes;
+    if (location != (id)[NSNull null]) {
+      myEvent.location = location;
+    }
+    if (notes != (id)[NSNull null]) {
+      myEvent.notes = notes;
+    }
     myEvent.startDate = myStartDate;
 
     int duration = _endInterval - _startInterval;
@@ -561,8 +565,12 @@
     NSTimeInterval _endInterval = [endTime doubleValue] / 1000; // strip millis
 
     myEvent.title = title;
-    myEvent.location = location;
-    myEvent.notes = notes;
+    if (location != (id)[NSNull null]) {
+      myEvent.location = location;
+    }
+    if (notes != (id)[NSNull null]) {
+      myEvent.notes = notes;
+    }
     myEvent.startDate = myStartDate;
 
     int duration = _endInterval - _startInterval;
@@ -686,8 +694,12 @@
   }
 
   myEvent.title = title;
-  myEvent.location = location;
-  myEvent.notes = notes;
+  if (location != (id)[NSNull null]) {
+      myEvent.location = location;
+  }
+  if (notes != (id)[NSNull null]) {
+      myEvent.notes = notes;
+  }
 
   [self.commandDelegate runInBackground: ^{
     EKCalendar* calendar = nil;
@@ -736,13 +748,20 @@
 
     self.interactiveCallbackId = command.callbackId;
 
-    EKEventEditViewController* controller = [[EKEventEditViewController alloc] init];
-    controller.event = myEvent;
-    controller.eventStore = self.eventStore;
-    controller.editViewDelegate = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
+    @try {
+      EKEventEditViewController* controller = [[EKEventEditViewController alloc] init];
+      controller.event = myEvent;
+      controller.eventStore = self.eventStore;
+      controller.editViewDelegate = self;
+      dispatch_async(dispatch_get_main_queue(), ^{
         [self.viewController presentViewController:controller animated:YES completion:nil];
-    });
+      });
+    }
+    @catch (NSException *exception) {
+      CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"EKEventEditViewController exception"];
+      [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+      return;
+    }
   }];
 }
 

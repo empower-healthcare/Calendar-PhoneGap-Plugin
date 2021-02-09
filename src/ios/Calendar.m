@@ -749,11 +749,11 @@
     self.interactiveCallbackId = command.callbackId;
 
     @try {
-      EKEventEditViewController* controller = [[EKEventEditViewController alloc] init];
-      controller.event = myEvent;
-      controller.eventStore = self.eventStore;
-      controller.editViewDelegate = self;
       dispatch_async(dispatch_get_main_queue(), ^{
+        EKEventEditViewController* controller = [[EKEventEditViewController alloc] init];
+        controller.event = myEvent;
+        controller.eventStore = self.eventStore;
+        controller.editViewDelegate = self;
         [self.viewController presentViewController:controller animated:YES completion:nil];
       });
     }
